@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { cookies } from "next/headers";
+import NavBar from "@/app/components/client/NavBar";
+import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -16,13 +18,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const cookieStore = cookies();
-  const theme = cookieStore.get('theme');
+  const theme = cookieStore.get("theme");
   return (
-    <html lang="en" data-theme={theme?.value}>
-      <body className={inter.className}>
-        <ThemeToggle initalValue={theme?.value as ('light' | 'dark')} />
-        {children}
+    <ClerkProvider>
+      <html lang="en" data-theme={theme?.value}>
+        <body className={inter.className}>
+          <NavBar />
+          {children}
         </body>
-    </html>
+      </html>
+    </ClerkProvider>
   );
 }
