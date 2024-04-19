@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 import ThemeToggle from "./ThemeToggle";
 import { SignedIn, UserButton } from "@clerk/nextjs";
-import { User } from "@clerk/nextjs/server";
+import MapLinks from "./MapButtons";
 
 function NavBar() {
   const cookieStore = cookies();
@@ -12,6 +12,8 @@ function NavBar() {
         Westleigh Inventory System
       </span>
       <div className="w-auto justify-end inline-flex flex-grow mr-3 mt-1 gap-5">
+        <MapLinks />
+
         <SignedIn>
           <UserButton />
         </SignedIn>
