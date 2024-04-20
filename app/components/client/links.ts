@@ -1,9 +1,15 @@
+const defaultClassName: string = "rounded-lg p-[6px]";
+
 const links = [
   {
     link: "/",
     text: "Home",
-    className:
-      "bg-white text-black rounded-lg p-1 hover:bg-black hover:text-white",
+    className: defaultClassName,
+  },
+  {
+    link: "/admin",
+    text: "Admin",
+    className: defaultClassName,
   },
 ];
 

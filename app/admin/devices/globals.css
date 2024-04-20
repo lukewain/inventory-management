@@ -1,0 +1,90 @@
+#access-error {
+  display: flex;
+  height: 80vh;
+  width: 100vh;
+  margin: auto;
+  align-items: center;
+  justify-content: center;
+}
+
+#devices {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding-top: 30px;
+}
+
+#devices-title {
+  background-color: black;
+  color: white;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+:root[data-theme="dark"] #devices-title {
+  background-color: white;
+  color: black;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+:root[data-theme="dark"] #recent-items {
+  background-color: white;
+  color: black;
+  margin-left: 80px;
+  margin-top: 50px;
+}
+
+:root #recent-items {
+  background-color: black;
+  color: white;
+  margin-left: 80px;
+  margin-top: 50px;
+}
+
+:root[data-theme="dark"] .btn {
+  background-color: black;
+  border-color: black;
+  color: white;
+}
+
+:root .btn {
+  background-color: white;
+  border-color: white;
+  color: black;
+}
+
+#device-list {
+  margin: auto;
+  width: 80vw;
+  height: 70vh;
+  background-color: white;
+  border-color: black;
+  border-width: 4px;
+  border-radius: 15px;
+  margin-top: 40px;
+}
+
+:root[data-theme="dark"] #device-list {
+  margin: auto;
+  width: 80vw;
+  height: 70vh;
+  background-color: black;
+  border-color: white;
+  border-width: 4px;
+  border-radius: 15px;
+  margin-top: 40px;
+}
+
+:root table,
+th,
+td {
+  border: 1px solid white;
+}
+
+:root[data-theme="dark"] table,
+th,
+td {
+  border: 1px solid white;
+}

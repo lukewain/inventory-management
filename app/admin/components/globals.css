@@ -1,0 +1,56 @@
+#access-error {
+  display: flex;
+  height: 80vh;
+  width: 100vh;
+  margin: auto;
+  align-items: center;
+  justify-content: center;
+}
+
+#dashboard-title {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding-top: 30px;
+}
+
+#admin-title {
+  background-color: black;
+  color: white;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+:root[data-theme="dark"] #admin-title {
+  background-color: white;
+  color: black;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+:root[data-theme="dark"] #recent-items {
+  background-color: white;
+  color: black;
+  margin-left: 80px;
+  margin-top: 50px;
+}
+
+:root #recent-items {
+  background-color: black;
+  color: white;
+  margin-left: 80px;
+  margin-top: 50px;
+}
+
+:root[data-theme="dark"] .btn {
+  background-color: black;
+  border-color: black;
+  color: white;
+}
+
+:root .btn {
+  background-color: white;
+  border-color: white;
+  color: black;
+}

@@ -11,7 +11,7 @@ function NavBar() {
       <span className="text-xl font-extrabold tracking-wide ml-3">
         Westleigh Inventory System
       </span>
-      <div className="w-auto justify-end inline-flex flex-grow mr-3 mt-1 gap-5">
+      <div className="w-auto justify-end inline-flex flex-grow mr-3 gap-5">
         <MapLinks />
 
         <SignedIn>

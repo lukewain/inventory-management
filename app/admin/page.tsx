@@ -1,13 +1,25 @@
-import { clerkClient } from "@clerk/nextjs/server";
-import { getUsers } from "./components/fetchUser";
+import { clerkClient, currentUser } from "@clerk/nextjs/server";
+import { AccessError, AdminDashboard } from "./components/pageComponents";
+
+async function verifyUser() {
+  const connectedUser = await currentUser();
+  if (!connectedUser) {
+    return false;
+  }
+  if (connectedUser.publicMetadata.isAdmin === true) {
+    return true;
+  } else {
+    return false;
+  }
+}
 
 export default async function AdminPage() {
-  const userList = await getUsers();
-  let valid = false;
-  if (userList !== null) {
-    valid = true;
-  } else {
-    valid = false;
-  }
-  return <div className="ml-11">{valid && <h1>YIPPEEEEE</h1>}</div>;
+  // Fetch user metadata
+  const canAccess = await verifyUser();
+
+  return (
+    <div>
+      {canAccess && <AdminDashboard />} {!canAccess && <AccessError />}
+    </div>
+  );
 }

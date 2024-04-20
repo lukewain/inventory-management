@@ -70,15 +70,6 @@
   }
 }
 
-/* @layer base {
-  * {
-    @apply border-border;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
-} */
-
 #invert {
   filter: invert(1);
 }
@@ -97,4 +88,34 @@
 
 :root[data-theme="dark"] nav span {
   color: white;
+}
+
+:root[data-theme="dark"] #recent-items {
+  background-color: white;
+  color: black;
+}
+
+:root #recent-items {
+  background-color: black;
+  color: white;
+}
+
+:root[data-theme="dark"] #active {
+  background-color: white;
+  color: black;
+}
+
+:root[data-theme="dark"] #active:hover {
+  background-color: black;
+  color: white;
+}
+
+:root #active {
+  background-color: black;
+  color: white;
+}
+
+:root #active:hover {
+  background-color: white;
+  color: black;
 }
