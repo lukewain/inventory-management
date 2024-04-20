@@ -1,11 +1,13 @@
 import prisma from "@/app/prisma";
+import { Device } from "@prisma/client/edge";
 
-async function getDevices() {
+import "../globals.css"
+
+async function GetDevices() {
   const devices = await prisma.device.findMany();
-  if (devices.length < 1) {
+  if (devices.length > 1) {
     return (
-      <div id="device-table">
-        {devices.map((device) => (
+      {devices.map((device: Device) => (
           <tr>
             <th>{device.id}</th>
             <th>{device.name}</th>
@@ -13,12 +15,10 @@ async function getDevices() {
             <th>{device.teacher}</th>
             <th>{device.addedAt.toString()}</th>
           </tr>
-        ))}
-      </div>
-    );
+        ))})
   } else {
     return null;
   }
 }
 
-export { getDevices };
+export { GetDevices };

@@ -1,8 +1,11 @@
 import "./globals.css";
-import { getDevices } from "./components/deviceTable";
+import { GetDevices } from "./components/deviceTable";
 import React from "react";
+import prisma from "@/app/prisma";
+import { Device } from "@prisma/client/edge";
 
 export default async function Devices() {
+  const devices = await prisma.device.findMany()
   return (
     <div className="flex flex-col">
       <div id="devices">
@@ -19,7 +22,15 @@ export default async function Devices() {
             <th>Teacher</th>
             <th>Added At</th>
           </tr>
-          <getDevices />
+          {devices.map((device: Device) => (
+          <tr>
+            <th>{device.id}</th>
+            <th>{device.name}</th>
+            <th>{device.room}</th>
+            <th>{device.teacher}</th>
+            <th>{device.addedAt.toString()}</th>
+          </tr>
+        ))}
         </table>
       </div>
     </div>
