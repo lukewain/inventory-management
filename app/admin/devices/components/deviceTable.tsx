@@ -8,7 +8,7 @@ async function GetDevices() {
   if (devices.length > 1) {
     return (
       {devices.map((device: Device) => (
-          <tr>
+          <tr key={`row-${device.id}`}>
             <th>{device.id}</th>
             <th>{device.name}</th>
             <th>{device.room}</th>

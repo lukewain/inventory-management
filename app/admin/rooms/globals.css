@@ -7,7 +7,7 @@
   justify-content: center;
 }
 
-#devices {
+#rooms {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -15,14 +15,14 @@
   padding-top: 30px;
 }
 
-#devices-title {
+#room-title {
   background-color: black;
   color: white;
   padding: 10px;
   border-radius: 10px;
 }
 
-:root[data-theme="dark"] #devices-title {
+:root[data-theme="dark"] #room-title {
   background-color: white;
   color: black;
   padding: 10px;
@@ -43,7 +43,7 @@
   margin-top: 50px;
 }
 
-/* :root[data-theme="dark"] .btn {
+:root[data-theme="dark"] .btn {
   background-color: black;
   border-color: black;
   color: white;
@@ -53,9 +53,9 @@
   background-color: white;
   border-color: white;
   color: black;
-} */
+}
 
-#device-list {
+#room-list {
   margin: auto;
   width: 80vw;
   height: 70vh;
@@ -63,10 +63,10 @@
   border-color: black;
   border-width: 4px;
   border-radius: 15px;
-  margin-top: 30px;
+  margin-top: 40px;
 }
 
-:root[data-theme="dark"] #device-list {
+:root[data-theme="dark"] #room-list {
   margin: auto;
   width: 80vw;
   height: 70vh;
@@ -74,7 +74,7 @@
   border-color: white;
   border-width: 4px;
   border-radius: 15px;
-  margin-top: 30px;
+  margin-top: 40px;
 }
 
 :root table,
@@ -87,8 +87,4 @@ td {
 th,
 td {
   border: 1px solid white;
-}
-
-tr.selected {
-  background-color: yellow;
 }
