@@ -1,8 +1,10 @@
 import "./globals.css";
-import { GetDevices } from "./components/deviceTable";
 import React from "react";
 import prisma from "@/app/prisma";
 import { Device } from "@prisma/client/edge";
+import { DataTable } from "./table/data-table";
+import { columns } from "./table/columns";
+import ActionButtons from "./components/ActionButtons";
 
 export default async function Devices() {
   function deviceRoom(device: Device) {
@@ -15,22 +17,6 @@ export default async function Devices() {
     else return device.teacher;
   }
 
-  function highlightTableRow(row) {
-    const previouslySelectedRow = document.querySelector("tr.selected");
-    if (previouslySelectedRow) {
-      previouslySelectedRow.classList.remove("selected");
-    }
-
-    row.classList.add("selected");
-  }
-
-  const rows = document.querySelectorAll("table tr");
-  for (let i = 1; i < rows.length; i++) {
-    rows[i].onclick = function () {
-      highlightTableRow(this);
-    };
-  }
-
   const devices = await prisma.device.findMany();
   return (
     <div className="flex flex-col">
@@ -39,32 +25,11 @@ export default async function Devices() {
           Current Devices
         </h1>
       </div>
-      <div id="device-list">
-        <table style={{ width: "100%" }}>
-          <tbody>
-            <tr key="row-headers">
-              <th>ID</th>
-              <th>Name</th>
-              <th>Room</th>
-              <th>Teacher</th>
-              <th>Added At</th>
-            </tr>
-            {devices.map((device: Device) => (
-              <tr key={`row-${device.id}`}>
-                <th>{device.id}</th>
-                <th>{device.name}</th>
-                <th>{deviceRoom(device)}</th>
-                <th>{deviceTeacher(device)}</th>
-                <th>{device.addedAt.toString()}</th>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      <div className="w-[95%] mx-auto mt-14">
+        <DataTable columns={columns} data={devices} />
       </div>
-      <div className="flex mx-auto mt-4 gap-14" id="option-buttons">
-        <button className="btn btn-success">Add Item</button>
-        <button className="btn btn-info">Modify Item</button>
-        <button className="btn btn-error">Remove Item</button>
+      <div id="action-buttons">
+        <ActionButtons />
       </div>
     </div>
   );
