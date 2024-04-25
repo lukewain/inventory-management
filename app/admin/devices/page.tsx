@@ -17,7 +17,7 @@ export default async function Devices() {
     else return device.teacher;
   }
 
-  const devices = await prisma.device.findMany();
+  const devices: Array<Device> = await prisma.device.findMany();
   return (
     <div className="flex flex-col">
       <div id="devices">

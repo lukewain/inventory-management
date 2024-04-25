@@ -24,17 +24,6 @@ import {
   PopulateSelectItemsTeachers,
 } from "./SelectCompacting";
 
-async function SubmitDevice(args) {
-  return new Promise((res, rej) => {
-    res(args);
-  });
-}
-
-const submitClick = async (...args) => {
-  let result = await SubmitDevice(args);
-  console.log("Submitted");
-};
-
 export default function ActionButtons() {
   return (
     <div>
@@ -42,7 +31,7 @@ export default function ActionButtons() {
         <DialogTrigger asChild>
           <Button style={{ backgroundColor: "green" }}>Add Item</Button>
         </DialogTrigger>
-        <DialogContent classname="sm:max-w-[425px]">
+        <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <DialogTitle>Add Device</DialogTitle>
             <DialogDescription>Add a new Device here</DialogDescription>
@@ -82,9 +71,7 @@ export default function ActionButtons() {
             </div>
           </div>
           <DialogFooter>
-            <Button type="submit" onClick={submitClick}>
-              Add Device
-            </Button>
+            <Button type="submit">Add Device</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
