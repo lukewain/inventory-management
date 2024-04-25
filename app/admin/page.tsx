@@ -1,17 +1,5 @@
-import { clerkClient, currentUser } from "@clerk/nextjs/server";
+import { verifyUser } from "./client/actions";
 import { AccessError, AdminDashboard } from "./components/pageComponents";
-
-async function verifyUser() {
-  const connectedUser = await currentUser();
-  if (!connectedUser) {
-    return false;
-  }
-  if (connectedUser.publicMetadata.isAdmin === true) {
-    return true;
-  } else {
-    return false;
-  }
-}
 
 export default async function AdminPage() {
   // Fetch user metadata
