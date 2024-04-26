@@ -98,7 +98,27 @@ const DevicePage = () => {
               name="roomName"
               render={({field}) => (
                 <FormItem>
-                  
+                  <FormLabel>
+                    Room
+                  </FormLabel>
+                  <FormControl>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                      disabled={isSubmitting}
+                      >
+                        <FormControl>
+                          <SelectTrigger disabled={isSubmitting}>
+                            <SelectValue placeholder="Select a room" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {
+                            
+                          }
+                        </SelectContent>
+                      </Select>
+                  </FormControl>
                 </FormItem>
               )}
           </form>
