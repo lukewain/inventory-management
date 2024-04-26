@@ -54,19 +54,19 @@ const ContactPage = () => {
         .then((response) => {
           if (response?.success) {
             toast.success(
-              "Message sent successfully. Thanks for getting in touch!",
+              "Message sent successfully. Thanks for getting in touch!"
             );
             form.reset();
           } else if (response?.error) {
             toast.error(
-              "An error occurred while sending your message. Please try again later.",
+              "An error occurred while sending your message. Please try again later."
             );
           }
         })
         .catch((error) => {
           console.error(error);
           toast.error(
-            "An error occurred while sending your message. Please try again later.",
+            "An error occurred while sending your message. Please try again later."
           );
         });
     });
