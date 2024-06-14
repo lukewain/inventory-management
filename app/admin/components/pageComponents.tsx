@@ -1,6 +1,7 @@
 import Link from "next/link";
 import "./globals.css";
 import { CarouselInfo } from "./ActionCarousel";
+import { Button } from "@/components/ui/button";
 
 function AdminDashboard() {
   return (
@@ -66,7 +67,10 @@ function AdminDashboard() {
 function AccessError() {
   return (
     <div id="access-error">
-      <h1 className="text-xl">You do not have access to this page.</h1>
+      <h1 className="text-xl mb-8">You do not have access to this page.</h1>
+      <Button>
+        <Link href="/">Home</Link>
+      </Button>
     </div>
   );
 }

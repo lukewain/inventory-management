@@ -1,11 +1,17 @@
 import prisma from "@/app/prisma";
+import { Prisma } from "@prisma/client";
 
 async function RecentItems() {
-  let recentDevices = await prisma.device.findMany({
-    orderBy: {
-      addedAt: "desc",
-    },
-  });
+  let recentDevices;
+  try {
+    recentDevices = await prisma.device.findMany({
+      orderBy: {
+        addedAt: "desc",
+      },
+    });
+  } catch {
+    recentDevices = [];
+  }
 
   return (
     <div id="recent-devices" className="ml-4">

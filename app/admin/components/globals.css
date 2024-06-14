@@ -1,5 +1,6 @@
 #access-error {
   display: flex;
+  flex-direction: column;
   height: 80vh;
   width: 100vh;
   margin: auto;
