@@ -3,6 +3,9 @@ import { Prisma } from "@prisma/client";
 
 async function RecentItems() {
   let recentDevices;
+  {/*
+    TODO: Add error response when database is unavailable.
+  /*}
   try {
     recentDevices = await prisma.device.findMany({
       orderBy: {
