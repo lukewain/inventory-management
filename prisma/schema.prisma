@@ -14,29 +14,26 @@ datasource db {
 }
 
 model Device {
-  id      Int      @id @default(autoincrement())
-  name    String
-  room    String? // Assigned to room if student pc
-  teacher String? //Assigned to teacher if laptop
-  addedAt DateTime @default(now())
+  id        Int      @id @default(autoincrement())
+  name      String
+  room      Rooms? @relation(fields: [roomId], references: [id]) // Assigned to room if student pc
+  teacher   Teacher? @relation(fields: [teacherId], references: [id]) //Assigned to teacher if laptop
+  addedAt   DateTime @default(now())
+  roomId Int?
+  teacherId Int?
 }
 
 model Rooms {
   id      Int      @id @default(autoincrement())
   name    String
+  devices Device[]
   subject String?
-  addedAt DateTime @default(now())
-}
-
-model Subject {
-  id      Int      @id @default(autoincrement())
-  name    String
   addedAt DateTime @default(now())
 }
 
 model Teacher {
   id      Int      @id @default(autoincrement())
   name    String
-  subject String?
   addedAt DateTime @default(now())
+  devices Device[]
 }

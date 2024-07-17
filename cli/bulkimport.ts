@@ -2,7 +2,7 @@
 
 const fs = require("fs");
 const path = require("path");
-const { PrismaClient } = require("@prisma/client");
+import { PrismaClient } from '@prisma/client'
 
 function returnArg(
   possibles: Array<string>,
@@ -59,26 +59,119 @@ if (args["name"]) {
 }
 
 // Async write function
-async function main(csvPath: string, database) {
+async function deviceMain(csvPath: string, database: PrismaClient) {
   try {
     // Read CSV file
     console.log("Reading CSV file...");
     const csvData = fs.readFileSync(csvPath, "utf-8");
     // Parse CSV data
     console.log("Parsing CSV data...");
-    const devices = csvData.split("\n");
+    const devices: Array<string> = csvData.split("\n");
     console.log("Removing header line...");
     devices.shift(); // Remove header line
-    const parsedDevices = devices.map(async (device) => {
+    devices.forEach(async (device: string) => {
+
+      let rID: number | null;
+      let tID: number | null;
+
       const [name, room, teacher] = device.split(",");
-      const d = await database.devices.create({
+
+      // Check if the room exists
+      const r = await database.rooms.findUnique({
+        where: {
+          name: room
+        }
+      })
+      if (r) {
+        console.log(`Room ${r} found.`);
+        rID = r.id
+      } else {
+        rID = null        
+      }
+
+      // Check if the teacher exists
+      const t = await database.teacher.findUnique({
+        where: {
+          name: teacher
+        }
+      })
+      if (t) {
+        console.log(`Teacher ${t} found.`);
+        tID = t.id
+      } else {
+        tID = null
+      }
+
+      const d = await database.device.create({
         data: {
           name: name,
-          room: room,
-          teacher: teacher,
+          roomId: rID,
+          teacherId: tID,
         },
       });
       console.log(`Device ${d} created.`);
+    });
+  } catch {
+    throw new Error("Something went wrong trying to parse the CSV");
+  }
+}
+
+async function teacherMain(csvPath: string, database: PrismaClient) {
+  try {
+    // Read CSV file
+    console.log("Reading CSV file...");
+    const csvData = fs.readFileSync(csvPath, "utf-8");
+    // Parse CSV data
+    console.log("Parsing CSV data...");
+    const devices: Array<string> = csvData.split("\n");
+    console.log("Removing header line...");
+    devices.shift(); // Remove header line
+    devices.forEach(async (room: string) => {
+
+      let rID: number | null;
+      let tID: number | null;
+
+      const [name, subject] = room.split(",");
+
+      if (subject.length > 1) {
+        const r = await database.rooms.create({
+          data: {
+            name: name,
+            subject: subject
+          }
+        });
+      }
+    });
+  } catch {
+    throw new Error("Something went wrong trying to parse the CSV");
+  }
+}
+
+async function roomMain(csvPath: string, database: PrismaClient) {
+  try {
+    // Read CSV file
+    console.log("Reading CSV file...");
+    const csvData = fs.readFileSync(csvPath, "utf-8");
+    // Parse CSV data
+    console.log("Parsing CSV data...");
+    const rooms: Array<string> = csvData.split("\n");
+    console.log("Removing header line...");
+    rooms.shift(); // Remove header line
+    rooms.forEach(async (room: string) => {
+
+      let rID: number | null;
+      let tID: number | null;
+
+      const [name, subject] = room.split(",");
+
+      if (subject.length > 1) {
+        const r = await database.rooms.create({
+          data: {
+            name: name,
+            subject: subject
+          }
+        });
+      }
     });
   } catch {
     throw new Error("Something went wrong trying to parse the CSV");
@@ -91,6 +184,10 @@ const exists = fs.existsSync(importCsvPath);
 // All flag declarations
 const force = args["force"] || args["F"] || false;
 const generate = args["generate"] || args["G"] || false;
+const device = args["device"] || args["D"] || false;
+const teacher = args["teacher"] || args["T"] || false;
+const room = args["room"] || args["R"] || false;
+const specifics = device || teacher || room;
 
 // Check if arg exists in args
 if (force && !generate) {
@@ -103,10 +200,31 @@ if (force && !generate) {
   console.error(
     `WARNING: This will overwrite the existing ${filename}. To overwrite, re-run the command using --force`
   );
-} else if (exists) {
+} else if (exists && !generate && !specifics) {
+  console.log("No specifics found. Please specify using  --device, --teacher or --room.");
+} else if (exists && specifics && !generate) {
+  // Create temp connection to the db
+  const prisma = new PrismaClient();
+  if (device) {
+    deviceMain(importCsvPath, prisma)
+    .then(async () => {
+      await prisma.$disconnect();
+    })
+    .catch(async (e) => {
+      console.error(e);
+      await prisma.$disconnect();
+      process.exit(1);
+    })
+  } else if (teacher) {
+
+  }
+}
+
+/*
+else if (exists && device) {
   // Create temp connection to the db and pass information through. Default information will go into the DEVICES table.
   const db = new PrismaClient();
-  main(importCsvPath, db)
+  deviceMain(importCsvPath, db)
     .then(async () => {
       await db.$disconnect();
     })
@@ -115,4 +233,5 @@ if (force && !generate) {
       await db.$disconnect();
       process.exit(1);
     });
-}
+} 
+*/
