@@ -2,7 +2,7 @@
 
 const fs = require("fs");
 const path = require("path");
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient } from "@prisma/client";
 
 function returnArg(
   possibles: Array<string>,
@@ -45,7 +45,7 @@ const args = getArgs();
 // Variable and Type declarations
 let filename: string;
 
-console.log(args);
+// console.log(args);
 
 if (args["name"]) {
   if (args["name"].endsWith(".csv")) {
@@ -70,36 +70,35 @@ async function deviceMain(csvPath: string, database: PrismaClient) {
     console.log("Removing header line...");
     devices.shift(); // Remove header line
     devices.forEach(async (device: string) => {
-
       let rID: number | null;
       let tID: number | null;
 
       const [name, room, teacher] = device.split(",");
 
       // Check if the room exists
-      const r = await database.rooms.findUnique({
+      const r = await database.rooms.findFirst({
         where: {
-          name: room
-        }
-      })
+          name: { contains: room },
+        },
+      });
       if (r) {
         console.log(`Room ${r} found.`);
-        rID = r.id
+        rID = r.id;
       } else {
-        rID = null        
+        rID = null;
       }
 
       // Check if the teacher exists
-      const t = await database.teacher.findUnique({
+      const t = await database.teacher.findFirst({
         where: {
-          name: teacher
-        }
-      })
+          name: { contains: teacher },
+        },
+      });
       if (t) {
         console.log(`Teacher ${t} found.`);
-        tID = t.id
+        tID = t.id;
       } else {
-        tID = null
+        tID = null;
       }
 
       const d = await database.device.create({
@@ -127,7 +126,6 @@ async function teacherMain(csvPath: string, database: PrismaClient) {
     console.log("Removing header line...");
     devices.shift(); // Remove header line
     devices.forEach(async (room: string) => {
-
       let rID: number | null;
       let tID: number | null;
 
@@ -137,8 +135,8 @@ async function teacherMain(csvPath: string, database: PrismaClient) {
         const r = await database.rooms.create({
           data: {
             name: name,
-            subject: subject
-          }
+            subject: subject,
+          },
         });
       }
     });
@@ -158,7 +156,6 @@ async function roomMain(csvPath: string, database: PrismaClient) {
     console.log("Removing header line...");
     rooms.shift(); // Remove header line
     rooms.forEach(async (room: string) => {
-
       let rID: number | null;
       let tID: number | null;
 
@@ -168,8 +165,8 @@ async function roomMain(csvPath: string, database: PrismaClient) {
         const r = await database.rooms.create({
           data: {
             name: name,
-            subject: subject
-          }
+            subject: subject,
+          },
         });
       }
     });
@@ -181,6 +178,18 @@ async function roomMain(csvPath: string, database: PrismaClient) {
 const importCsvPath = path.resolve(__dirname, filename);
 const exists = fs.existsSync(importCsvPath);
 
+// Headers for example files
+const devices: Array<string> = ["Device", "Room", "Teacher"];
+const teachers: Array<string> = ["Name", "Subject"];
+const rooms: Array<string> = ["Name", "Subject"];
+
+function generateCSV(headers: Array<string>, filename: string) {
+  const csvData = headers.join(",") + "\n";
+  fs.writeFileSync(filename, csvData);
+  console.log(`Generated ${filename}`);
+  process.exit(0);
+}
+
 // All flag declarations
 const force = args["force"] || args["F"] || false;
 const generate = args["generate"] || args["G"] || false;
@@ -190,33 +199,71 @@ const room = args["room"] || args["R"] || false;
 const specifics = device || teacher || room;
 
 // Check if arg exists in args
-if (force && !generate) {
+if (!exists && !generate && !specifics) {
+  console.log(
+    `No file found. Please use --generate and --device, --teacher or --room\nIf you would like to change the filename, use --name <filename>`
+  );
+  process.exit(0);
+} else if (force && !generate) {
   let tempArg = returnArg(["force", "F"], args);
   if (!tempArg) {
     throw new Error("Flag force or F not found.");
   }
   console.error(`WARNING: ${tempArg} cannot be used without --generate flag`);
+} else if ((force && generate) || (!exists && generate)) {
+  if (!specifics) {
+    console.log(
+      "No specifics found. Please specify using  --device, --teacher or --room."
+    );
+    process.exit(0);
+  } else if (device) {
+    generateCSV(devices, filename);
+  } else if (teacher) {
+    generateCSV(teachers, filename);
+  } else if (room) {
+    generateCSV(rooms, filename);
+  }
 } else if (exists && generate && !force) {
   console.error(
     `WARNING: This will overwrite the existing ${filename}. To overwrite, re-run the command using --force`
   );
 } else if (exists && !generate && !specifics) {
-  console.log("No specifics found. Please specify using  --device, --teacher or --room.");
+  console.log(
+    "No specifics found. Please specify using  --device, --teacher or --room."
+  );
 } else if (exists && specifics && !generate) {
   // Create temp connection to the db
   const prisma = new PrismaClient();
   if (device) {
     deviceMain(importCsvPath, prisma)
-    .then(async () => {
-      await prisma.$disconnect();
-    })
-    .catch(async (e) => {
-      console.error(e);
-      await prisma.$disconnect();
-      process.exit(1);
-    })
+      .then(async () => {
+        await prisma.$disconnect();
+      })
+      .catch(async (e) => {
+        console.error(e);
+        await prisma.$disconnect();
+        process.exit(1);
+      });
   } else if (teacher) {
-
+    teacherMain(importCsvPath, prisma)
+      .then(async () => {
+        await prisma.$disconnect();
+      })
+      .catch(async (e) => {
+        console.error(e);
+        await prisma.$disconnect();
+        process.exit(1);
+      });
+  } else if (room) {
+    roomMain(importCsvPath, prisma)
+      .then(async () => {
+        await prisma.$disconnect();
+      })
+      .catch(async (e) => {
+        console.error(e);
+        await prisma.$disconnect();
+        process.exit(1);
+      });
   }
 }
 
